@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>HACKER TERMINAL</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: lime;
+    font-family: Consolas, monospace;
+    overflow: hidden;
+}
+
+#startScreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#terminal {
+    padding: 20px;
+    white-space: pre-line;
+    font-size: 18px;
+}
+
+#bgImage {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.15;
+    z-index: -1;
+}
+
+input {
+    background: black;
+    border: none;
+    border-bottom: 2px solid lime;
+    color: lime;
+    font-size: 18px;
+    outline: none;
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">⚠ CLICK TO ENTER SYSTEM ⚠</div>
+
+<img id="bgImage" src="image.png">
+
+<div id="terminal"></div>
+
+<audio id="sound" src="sound.mp3" loop></audio>
+
+<script>
+const PASSWORD = "1337";
+
+const terminal = document.getElementById("terminal");
+const sound = document.getElementById("sound");
+const startScreen = document.getElementById("startScreen");
+
+const lines = [
+"> Booting system...",
+"> Establishing secure connection...",
+"> Accessing classified database...",
+"> ERROR: Unauthorized access detected!",
+"> Activating hacker protocol...",
+"",
+"> Enter password to restore system:"
+];
+
+let i = 0;
+
+function typeLine() {
+    if (i < lines.length) {
+        terminal.innerHTML += lines[i] + "\n";
+        i++;
+        setTimeout(typeLine, 700);
+    } else {
+        createInput();
+    }
+}
+
+function createInput() {
+    const input = document.createElement("input");
+    input.type = "password";
+    terminal.appendChild(input);
+    input.focus();
+
+    input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            if (input.value === PASSWORD) {
+                sound.pause();
+                document.exitFullscreen();
+                document.body.innerHTML = "<h1 style='color:lime;text-align:center;margin-top:20%;'>SYSTEM RESTORED 😎</h1>";
+            } else {
+                terminal.innerHTML += "\n> ACCESS DENIED\n";
+                input.value = "";
+            }
+        }
+    });
+}
+
+startScreen.addEventListener("click", () => {
+    document.documentElement.requestFullscreen();
+    startScreen.style.display = "none";
+    sound.play();
+    typeLine();
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        sound.pause();
+        document.exitFullscreen();
+    }
+});
+</script>
+
+</body>
+</html>
